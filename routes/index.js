@@ -9,7 +9,8 @@ module.exports = function(io) {
     router.use(express.static(__dirname + '/public'));
 
     router.get('/', function (req, res) {
-      res.render( 'index', { title: 'Twitter.js', tweets: null, showForm: true, nameValue: ''} );
+      var list = tweetBank.list();
+      res.render( 'index', { title: 'Twitter.js', tweets: list, showForm: true, nameValue: ''} );
     });
 
     router.get('/users/:name', function(req, res) {

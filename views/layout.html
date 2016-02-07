@@ -81,12 +81,17 @@
   </body>
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
     <script>
+        var newItems = false;
         var tweetList = $('.tweetList');
         var db = new Firebase('https://g7qywdsyig0.firebaseio-demo.com/tweets');
-        db.on('child_added', function(snapshot) {
+        db.limitToLast(1).on('child_added', function(snapshot) {
+          if (!newItems) return;
           var message = snapshot.val();
-          tweetList.append('<li><div class="allTweets"><div class="leftTweet"><img src=http://www.adweek.com/files/imagecache/node-blog/blogs/totinos-stock-01-2014.jpg class="imageSide"></div><div class="rightTweet"><p class="tweetName"><a href="/users/' + message.name + '{{tweet.name}}">' + message.name + '</a></p><p class="tweetBody">' + message.date + ' - ' + message.text + '</p><p class="tweetBody"><a href="/retweet">Re-tweet</a></p></div></div></li>');
+          tweetList.append('<li id="' + message.date + '"><div class="allTweets"><div class="leftTweet"><img src=http://www.adweek.com/files/imagecache/node-blog/blogs/totinos-stock-01-2014.jpg class="imageSide"></div><div class="rightTweet"><p class="tweetName"><a href="/users/' + message.name + '{{tweet.name}}">' + message.name + '</a></p><p class="tweetBody">' + message.date + ' - ' + message.text + '</p></div></div></li>');
           console.log('firebase: ' + message.name + ' - ' + message.text);
+        });
+        db.once('value', function(snapshot) {
+          newItems = true;
         });
     </script>
 </html>
